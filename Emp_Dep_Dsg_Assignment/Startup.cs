@@ -31,6 +31,21 @@ namespace Emp_Dep_Dsg_Assignment
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Emp_Dep_Dsg_Assignment", Version = "v1" });
             });
+
+
+            //cors
+            //cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "myPolicy", builder =>
+
+                {
+                    builder.WithOrigins("http://localhost:3000/")
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +57,8 @@ namespace Emp_Dep_Dsg_Assignment
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Emp_Dep_Dsg_Assignment v1"));
             }
+
+            app.UseCors("myPolicy");
 
             app.UseHttpsRedirection();
 

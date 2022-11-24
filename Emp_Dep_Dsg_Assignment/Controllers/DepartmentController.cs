@@ -39,7 +39,7 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateDepartment([FromBody] Department department)
+        public IActionResult UpdateDepartment(Department department)
         {
             if (ModelState.IsValid)
             {
@@ -49,6 +49,7 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
             }
             return BadRequest();
         }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteDepartment(int id)
         {
