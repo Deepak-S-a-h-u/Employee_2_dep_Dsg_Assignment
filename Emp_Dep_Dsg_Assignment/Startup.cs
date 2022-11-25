@@ -37,13 +37,13 @@ namespace Emp_Dep_Dsg_Assignment
             //cors
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "myPolicy", builder =>
+                options.AddPolicy(name: "myPolicy", Builder =>
 
                 {
-                    builder.WithOrigins("http://localhost:3000/")
-                    .AllowAnyOrigin()
+                    Builder.WithOrigins("http://localhost:3000/")
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin();
                 });
             });
         }

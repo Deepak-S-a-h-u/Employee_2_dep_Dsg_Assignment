@@ -56,8 +56,8 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                 return NotFound();
             return Ok(designationInDb);
         }
-     
-        [HttpDelete("{id}")]
+
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteDesignation(int id)
         {
             var designationindb = _context.Designations.Find(id);

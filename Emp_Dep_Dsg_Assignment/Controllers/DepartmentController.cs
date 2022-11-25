@@ -50,7 +50,7 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteDepartment(int id)
         {
             var departmentindb = _context.Departments.Find(id);
