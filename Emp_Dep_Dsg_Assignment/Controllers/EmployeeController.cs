@@ -82,10 +82,17 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
             _context.Employees.Update(empdata);
             _context.SaveChanges();
 
+            var olddepartment = _context.EmpDep.Where(dep => dep.EmployeeID == updateEmployeeDTO.ID).Select(x=>x.DepartmentID).ToList();
+            foreach (var item in olddepartment)
+            {
+                var empDep = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);
+                _context.EmpDep.Remove(empDep);
+                _context.SaveChanges();
+            }
 
-            var empDep = _context.EmpDep.FirstOrDefault(dep=>dep.EmployeeID==updateEmployeeDTO.ID && dep.DepartmentID==updateEmployeeDTO.OldDepartmentID);
+            /*var empDep = _context.EmpDep.FirstOrDefault(dep=>dep.EmployeeID==updateEmployeeDTO.ID && dep.DepartmentID==updateEmployeeDTO.OldDepartmentID);
             _context.EmpDep.Remove(empDep);
-            _context.SaveChanges();
+            _context.SaveChanges();*/
             foreach (var item in updateEmployeeDTO.Department)
             {
                 var EmpDepinDB= _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);

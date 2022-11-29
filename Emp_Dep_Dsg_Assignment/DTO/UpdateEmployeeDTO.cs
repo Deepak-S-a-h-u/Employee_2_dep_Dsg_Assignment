@@ -19,6 +19,6 @@ namespace Emp_Dep_Dsg_Assignment.DTO
         public string Address { get; set; }
         public int[] Department { get; set; }
         public int Designation { get; set; }
-        public int OldDepartmentID { get; set; }
+    
     }
 }
