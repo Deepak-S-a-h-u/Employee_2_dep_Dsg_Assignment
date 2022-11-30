@@ -83,19 +83,19 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
             _context.SaveChanges();
 
             var olddepartment = _context.EmpDep.Where(dep => dep.EmployeeID == updateEmployeeDTO.ID).Select(x=>x.DepartmentID).ToList();
+            List<EmpDep> empDeps = new List<EmpDep>();
             foreach (var item in olddepartment)
             {
                 var empDep = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);
-                _context.EmpDep.Remove(empDep);
-                _context.SaveChanges();
+                empDeps.Add(empDep);
             }
+            _context.EmpDep.RemoveRange(empDeps);
+            _context.SaveChanges();
 
-            /*var empDep = _context.EmpDep.FirstOrDefault(dep=>dep.EmployeeID==updateEmployeeDTO.ID && dep.DepartmentID==updateEmployeeDTO.OldDepartmentID);
-            _context.EmpDep.Remove(empDep);
-            _context.SaveChanges();*/
+            List<EmpDep> empDeps2 = new List<EmpDep>();
             foreach (var item in updateEmployeeDTO.Department)
             {
-                var EmpDepinDB= _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);
+                var EmpDepinDB = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);
                 if(EmpDepinDB==null)
                 {
                     var department = new EmpDep()
@@ -103,10 +103,11 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                         EmployeeID = updateEmployeeDTO.ID,
                         DepartmentID = item
                     };
-                    _context.EmpDep.Add(department);
-                    _context.SaveChanges();
+                    empDeps2.Add(department);
                 }
             }
+            _context.EmpDep.AddRange(empDeps2);
+            _context.SaveChanges();
             return Ok();
         }
         
