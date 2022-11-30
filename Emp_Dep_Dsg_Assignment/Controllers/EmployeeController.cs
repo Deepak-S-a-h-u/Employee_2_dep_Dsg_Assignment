@@ -115,8 +115,15 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
         public IActionResult DeleteEmployee(int id)
         {
             var employeeInDb = _context.Employees.FirstOrDefault(employee => employee.ID == id);
-            _context.Employees.Remove(employeeInDb);
-            _context.SaveChanges();
+            
+            var depInEmployee = _context.EmpDep.Where(dep => dep.EmployeeID ==id).Select(x => x.DepartmentID).ToList();
+            foreach (var item in depInEmployee)
+            {
+                var empDep = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == id && dep.DepartmentID == item);
+                _context.EmpDep.Remove(empDep);
+                _context.SaveChanges();
+            }
+           
             return Ok();
             
         }
