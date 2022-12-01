@@ -39,7 +39,7 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                                   department = c.DepName,
                                   designation = d.DsgName
                               };
-
+            
             return Ok(emplyeeList);
         }
         [HttpPost]
