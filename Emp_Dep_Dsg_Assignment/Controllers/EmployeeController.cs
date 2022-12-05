@@ -36,11 +36,13 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                                   id = a.ID,
                                   name = a.Name,
                                   address = a.Address,
+                                  departmentid = b.DepartmentID,
                                   department = c.DepName,
+                                  designationid = d.ID,
                                   designation = d.DsgName
                               };
-            
-            return Ok(emplyeeList);
+            var sortedList = emplyeeList.Distinct().ToList();
+            return Ok(sortedList);
         }
         [HttpPost]
         public IActionResult saveEmployees([FromBody] EmployeeDTO employeeDTO)
@@ -127,6 +129,20 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
            
             return Ok();
             
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetEmployee(int id)
+        {
+            var employeeInDb = _context.Employees.FirstOrDefault(employee => employee.ID == id);
+
+            var depInEmployee = _context.EmpDep.Where(dep => dep.EmployeeID == id).Select(x => x.DepartmentID).ToList();
+            foreach (var item in depInEmployee)
+            {
+                var empDep = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == id && dep.DepartmentID == item);
+            }
+
+            return Ok(depInEmployee);
+
         }
     }
 }
