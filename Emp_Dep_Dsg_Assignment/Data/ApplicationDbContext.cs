@@ -16,7 +16,8 @@ namespace Emp_Dep_Dsg_Assignment.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<EmpDep>().HasKey(t => new { t.EmployeeID, t.DepartmentID });    //composit PK
+            modelBuilder.Entity<EmpDep>().HasKey(t => new { t.EmployeeID, t.DepartmentID });    
+            //composit PK
             modelBuilder.Entity<EmpDep>()
                 .HasOne(t => t.Employee)
                 .WithMany(t => t.Employees)

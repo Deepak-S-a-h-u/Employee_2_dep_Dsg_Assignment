@@ -24,25 +24,35 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
         [HttpGet]
         public IActionResult getEmployees()
         {
-            var emplyeeList = from a in _context.Employees
-                              join b in _context.EmpDep
-                              on a.ID equals b.EmployeeID
-                              join c in _context.Departments
-                              on b.DepartmentID equals c.ID
-                              join d in _context.Designations
-                              on a.DesignationID equals d.ID
-                              select new
-                              {
-                                  id = a.ID,
-                                  name = a.Name,
-                                  address = a.Address,
-                                  departmentid = b.DepartmentID,
-                                  department = c.DepName,
-                                  designationid = d.ID,
-                                  designation = d.DsgName
-                              };
-            var sortedList = emplyeeList.Distinct().ToList();
-            return Ok(sortedList);
+            var employeeList = from a in _context.Employees
+                                join b in _context.EmpDep
+                                on a.ID equals b.EmployeeID
+                                join c in _context.Departments
+                                on b.DepartmentID equals c.ID
+                                join d in _context.Designations
+                                on a.DesignationID equals d.ID
+                                select new
+                                {
+                                    id = a.ID,
+                                    name = a.Name,
+                                    address = a.Address,
+                                    departmentid = b.DepartmentID,
+                                    department = c.DepName,
+                                    designationid = d.ID,
+                                    designation = d.DsgName
+                                };
+           /* employeeList.GroupBy(x => new { x.id, x.name, x.address, x.designation }).Select(x => new Employee
+            {
+                Name = x.Key.name,
+                Employees=x.Select(Dept=>new EmpDep
+                {
+                    
+                })*/
+                
+           /* });*/
+           
+            return Ok(employeeList);
+
         }
         [HttpPost]
         public IActionResult saveEmployees([FromBody] EmployeeDTO employeeDTO)
