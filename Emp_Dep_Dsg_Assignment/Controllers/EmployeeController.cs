@@ -41,16 +41,21 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                                     designationid = d.ID,
                                     designation = d.DsgName
                                 };
-           /* employeeList.GroupBy(x => new { x.id, x.name, x.address, x.designation }).Select(x => new Employee
+         /*   employeeList.GroupBy(x => new { x.id, x.name, x.address, x.designation })
+            .Select(x => new Employee
             {
                 Name = x.Key.name,
-                Employees=x.Select(Dept=>new EmpDep
+                Address = x.Key.address,
+
+
+
+               *//* Employees = x.Select(Dept => new EmpDep
                 {
-                    
-                })*/
-                
-           /* });*/
-           
+
+                })*//*
+
+            });*/
+
             return Ok(employeeList);
 
         }
