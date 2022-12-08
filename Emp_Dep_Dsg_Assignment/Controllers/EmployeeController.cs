@@ -25,65 +25,80 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
         public IActionResult getEmployees()
         {
             var employeeList = from a in _context.Employees
-                                join b in _context.EmpDep
-                                on a.ID equals b.EmployeeID
-                                join c in _context.Departments
-                                on b.DepartmentID equals c.ID
-                                join d in _context.Designations
+                               join b in _context.EmpDep
+                               on a.ID equals b.EmployeeID
+                               join c in _context.Departments
+                               on b.DepartmentID equals c.ID
+                               join d in _context.Designations
                                 on a.DesignationID equals d.ID
-                                select new
+                                select new GetEmployeeInfo()
                                 {
-                                    id = a.ID,
-                                    name = a.Name,
-                                    address = a.Address,
-                                    departmentid = b.DepartmentID,
-                                    department = c.DepName,
-                                    designationid = d.ID,
-                                    designation = d.DsgName
+                                    ID = a.ID,
+                                    Name = a.Name,
+                                    Address = a.Address,
+                                    Departments = _context.EmpDep.Where(y => y.EmployeeID == a.ID).Select(y =>y.Department.DepName).ToList(),
+                                    DesignationID = d.ID,
+                                    Designation = d.DsgName
                                 };
-         /*   employeeList.GroupBy(x => new { x.id, x.name, x.address, x.designation })
-            .Select(x => new Employee
+            List<GetEmployeeInfo> filteredList = new List<GetEmployeeInfo>();
+            foreach (var item in employeeList)
             {
-                Name = x.Key.name,
-                Address = x.Key.address,
-
-
-
-               *//* Employees = x.Select(Dept => new EmpDep
+                var data = filteredList.FirstOrDefault(x => x.ID == item.ID);
+                if(data == null)
                 {
+                    filteredList.Add(item);
+                }
+            };
 
-                })*//*
 
-            });*/
 
-            return Ok(employeeList);
 
-        }
+
+            //var sorted = employeeList.GroupBy(x => new { x.id, x.name, x.address, x.designationid, x.designation })
+            //  .Select(x => new GetEmployeeInfo
+            //  {
+            //      ID = x.Key.id,
+            //      Name = x.Key.name,
+            //      Address = x.Key.address,
+            //      DesignationID = x.Key.designationid,
+            //      Designation = x.Key.designation,
+            //      Employees = _context.EmpDep.Where(y => y.EmployeeID == x.Key.id).Select(y=>y.Department.DepName).ToList()
+            //  }) ;
+
+            return Ok(filteredList);
+}
         [HttpPost]
         public IActionResult saveEmployees([FromBody] EmployeeDTO employeeDTO)
         {
-            var employee = new Employee()
+            if(ModelState.IsValid)
             {
-                Name = employeeDTO.Name,
-                Address = employeeDTO.Address,
-                DesignationID = employeeDTO.Designation,
-            };
-            _context.Add(employee);
-            _context.SaveChanges();
-
-
-            foreach (var item in employeeDTO.Department)
-            {
-                var department = new EmpDep()
+                var employee = new Employee()
                 {
-                    EmployeeID = employee.ID,
-                    DepartmentID = item
+                    Name = employeeDTO.Name,
+                    Address = employeeDTO.Address,
+                    DesignationID = employeeDTO.Designation,
                 };
-                _context.EmpDep.Add(department);
+                _context.Add(employee);
                 _context.SaveChanges();
-            }
 
-            return Ok();
+
+                foreach (var item in employeeDTO.Department)
+                {
+                    var department = new EmpDep()
+                    {
+                        EmployeeID = employee.ID,
+                        DepartmentID = item
+                    };
+                    _context.EmpDep.Add(department);
+                    _context.SaveChanges();
+                }
+
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut]
