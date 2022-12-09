@@ -70,7 +70,11 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
         [HttpPost]
         public IActionResult saveEmployees([FromBody] EmployeeDTO employeeDTO)
         {
-            if(ModelState.IsValid)
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            else
             {
                 var employee = new Employee()
                 {
@@ -95,55 +99,61 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
 
                 return Ok();
             }
+           
+               
+        }
+
+        [HttpPut]
+        public IActionResult UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                var empdata = _context.Employees.Find(updateEmployeeDTO.ID);
+                if (empdata.ID == updateEmployeeDTO.ID)
+                {
+                    empdata.Name = updateEmployeeDTO.Name;
+                    empdata.Address = updateEmployeeDTO.Address;
+                    empdata.DesignationID = updateEmployeeDTO.Designation;
+                }
+                _context.Employees.Update(empdata);
+                _context.SaveChanges();
+
+                var olddepartment = _context.EmpDep.Where(dep => dep.EmployeeID == updateEmployeeDTO.ID).Select(x => x.DepartmentID).ToList();
+                List<EmpDep> empDeps = new List<EmpDep>();
+                foreach (var item in olddepartment)
+                {
+                    var empDep = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);
+                    empDeps.Add(empDep);
+                }
+                _context.EmpDep.RemoveRange(empDeps);
+                _context.SaveChanges();
+
+                List<EmpDep> empDeps2 = new List<EmpDep>();
+                foreach (var item in updateEmployeeDTO.Department)
+                {
+                    var EmpDepinDB = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);
+                    if (EmpDepinDB == null)
+                    {
+                        var department = new EmpDep()
+                        {
+                            EmployeeID = updateEmployeeDTO.ID,
+                            DepartmentID = item
+                        };
+                        empDeps2.Add(department);
+                    }
+                }
+                _context.EmpDep.AddRange(empDeps2);
+                _context.SaveChanges();
+                return Ok();
+            }
+
             else
             {
                 return BadRequest();
             }
         }
 
-        [HttpPut]
-        public IActionResult UpdateEmployee([FromBody] UpdateEmployeeDTO updateEmployeeDTO)
-        {
-            var empdata = _context.Employees.Find(updateEmployeeDTO.ID);
-            if (empdata.ID == updateEmployeeDTO.ID)
-            {
-                empdata.Name = updateEmployeeDTO.Name;
-                empdata.Address = updateEmployeeDTO.Address;
-                empdata.DesignationID = updateEmployeeDTO.Designation;
-            }
-            _context.Employees.Update(empdata);
-            _context.SaveChanges();
 
-            var olddepartment = _context.EmpDep.Where(dep => dep.EmployeeID == updateEmployeeDTO.ID).Select(x=>x.DepartmentID).ToList();
-            List<EmpDep> empDeps = new List<EmpDep>();
-            foreach (var item in olddepartment)
-            {
-                var empDep = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);
-                empDeps.Add(empDep);
-            }
-            _context.EmpDep.RemoveRange(empDeps);
-            _context.SaveChanges();
-
-            List<EmpDep> empDeps2 = new List<EmpDep>();
-            foreach (var item in updateEmployeeDTO.Department)
-            {
-                var EmpDepinDB = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == updateEmployeeDTO.ID && dep.DepartmentID == item);
-                if(EmpDepinDB==null)
-                {
-                    var department = new EmpDep()
-                    {
-                        EmployeeID = updateEmployeeDTO.ID,
-                        DepartmentID = item
-                    };
-                    empDeps2.Add(department);
-                }
-            }
-            _context.EmpDep.AddRange(empDeps2);
-            _context.SaveChanges();
-            return Ok();
-        }
-        
-        
         [HttpDelete("{id}")]
         public IActionResult DeleteEmployee(int id)
         {

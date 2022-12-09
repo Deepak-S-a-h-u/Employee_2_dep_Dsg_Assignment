@@ -13,7 +13,9 @@ namespace Emp_Dep_Dsg_Assignment.Models
 
         [Required(ErrorMessage = "Please Enter Address")]
         public string Address { get; set; }
-       
+        
+        [Required(ErrorMessage = "Designation required")]
+
         public int DesignationID { get; set; }
         [ForeignKey("DesignationID")]
         public Designation Designation { get; set; }

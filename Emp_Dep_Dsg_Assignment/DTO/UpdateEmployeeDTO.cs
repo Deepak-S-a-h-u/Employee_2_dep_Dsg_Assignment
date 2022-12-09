@@ -17,7 +17,9 @@ namespace Emp_Dep_Dsg_Assignment.DTO
 
         [Required(ErrorMessage = "Please Enter Address")]
         public string Address { get; set; }
+        [Required(ErrorMessage = "Please Enter Department")]
         public int[] Department { get; set; }
+        [Required(ErrorMessage = "Please Enter Designation")]
         public int Designation { get; set; }
     
     }
