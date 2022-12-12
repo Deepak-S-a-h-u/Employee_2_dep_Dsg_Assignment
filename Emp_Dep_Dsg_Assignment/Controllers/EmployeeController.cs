@@ -96,11 +96,8 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                     _context.EmpDep.Add(department);
                     _context.SaveChanges();
                 }
-
                 return Ok();
-            }
-           
-               
+            }   
         }
 
         [HttpPut]
@@ -153,7 +150,6 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
             }
         }
 
-
         [HttpDelete("{id}")]
         public IActionResult DeleteEmployee(int id)
         {
@@ -173,6 +169,49 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
         [HttpGet("{id}")]
         public IActionResult GetEmployee(int id)
         {
+            var employeeList = from a in _context.Employees
+                              
+                               join b in _context.EmpDep
+                               on a.ID equals b.EmployeeID
+                               join c in _context.Departments
+                               on b.DepartmentID equals c.ID
+                               join d in _context.Designations
+                                on a.DesignationID equals d.ID
+                               where(a.ID==id)
+                               select new 
+                               {
+                                   ID = a.ID,
+                                   Name = a.Name,
+                                   Address = a.Address,
+                                   Department = _context.EmpDep.Where(y => y.EmployeeID == a.ID).Select(y => y.Department.ID).ToList(),
+                                   DesignationID = d.ID,
+                                 
+                               };
+           // List<UpdateEmployeeDTO> filteredList = new List<UpdateEmployeeDTO>();
+            var x = employeeList.FirstOrDefault(x => x.ID == id);
+            return Ok(x);
+
+
+
+
+            //var sorted = employeeList.GroupBy(x => new { x.id, x.name, x.address, x.designationid, x.designation })
+            //  .Select(x => new GetEmployeeInfo
+            //  {
+            //      ID = x.Key.id,
+            //      Name = x.Key.name,
+            //      Address = x.Key.address,
+            //      DesignationID = x.Key.designationid,
+            //      Designation = x.Key.designation,
+            //      Employees = _context.EmpDep.Where(y => y.EmployeeID == x.Key.id).Select(y=>y.Department.DepName).ToList()
+            //  }) ;
+
+            /*return Ok(employeeList);*/
+        }
+
+
+
+
+        /*{
             var employeeInDb = _context.Employees.FirstOrDefault(employee => employee.ID == id);
 
             var depInEmployee = _context.EmpDep.Where(dep => dep.EmployeeID == id).Select(x => x.DepartmentID).ToList();
@@ -181,39 +220,10 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                 var empDep = _context.EmpDep.FirstOrDefault(dep => dep.EmployeeID == id && dep.DepartmentID == item);
             }
 
-            return Ok(depInEmployee);
+           
 
-        }
+            return Ok(depInEmployee);
+            
+        }*/
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*foreach(var dep in employeeDTO.Department)
-               {
-               var Department = employeeDTO.Department[dep];
-               }*/
