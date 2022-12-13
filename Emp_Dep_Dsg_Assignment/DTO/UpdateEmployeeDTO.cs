@@ -20,7 +20,7 @@ namespace Emp_Dep_Dsg_Assignment.DTO
         [Required(ErrorMessage = "Please Enter Department")]
         public int[] Department { get; set; }
         [Required(ErrorMessage = "Please Enter Designation")]
-        public int Designation { get; set; }
+        public int DesignationID { get; set; }
     
     }
 }

@@ -110,7 +110,7 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                 {
                     empdata.Name = updateEmployeeDTO.Name;
                     empdata.Address = updateEmployeeDTO.Address;
-                    empdata.DesignationID = updateEmployeeDTO.Designation;
+                    empdata.DesignationID = updateEmployeeDTO.DesignationID;
                 }
                 _context.Employees.Update(empdata);
                 _context.SaveChanges();
@@ -187,7 +187,6 @@ namespace Emp_Dep_Dsg_Assignment.Controllers
                                    DesignationID = d.ID,
                                  
                                };
-           // List<UpdateEmployeeDTO> filteredList = new List<UpdateEmployeeDTO>();
             var x = employeeList.FirstOrDefault(x => x.ID == id);
             return Ok(x);
 
